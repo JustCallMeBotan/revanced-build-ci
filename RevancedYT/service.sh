@@ -47,3 +47,14 @@ for user_id in $(ls /data/user); do
     rm -rf "/data/user/$user_id/$PS/cache/"*
     pm enable --user "$user_id" "$PS"
 done
+
+
+# add YouTube to WhiteList (Magisk Delta)
+for i in /data/user/*/com.google.android.youtube; do
+    user_name="$(ls -ld "$i" | awk '{ print $3 }')"
+    uid="$(id -u "$user_name")"
+    magisk --sqlite "INSERT INTO policies (uid,policy,until,logging,notification) VALUES($uid,2,0,1,1);$SQCMD"
+done
+# remove YouTube from DenyList and HideList
+magisk --denylist rm com.google.android.youtube
+magisk magiskhide rm com.google.android.youtube
