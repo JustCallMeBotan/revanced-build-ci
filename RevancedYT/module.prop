@@ -4,4 +4,4 @@ version=${VERSION}
 versionCode=${VERSIONCODE}
 author=ReVancedTeam
 description=YouTube ReVanced Module repacked by HuskyDG. Thanks @shekhawat2 for his initial work. DO NOT update YouTube on Play Store.
-updateJson=https://github.com/HuskyDG/revanced-build-ci/releases/download/lastest/update.json
+updateJson=https://github.com/HuskyDG/revanced-build-ci/releases/download/latest/update.json 
