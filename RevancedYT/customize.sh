@@ -89,3 +89,5 @@ unzip -oj "$MODPATH/$YOUTUBE/split_config.${ABI_APK}.apk" lib/${ABI}/* -d "$MODP
 chmod -R 755 "$MODPATH/$YOUTUBE/lib/$short_ABI"
 
 ln -sfT "./sqlite3_${ABI}" "$MODPATH/bin/sqlite3"
+
+ui_print "- Welcome to Magisk Delta ~~"
