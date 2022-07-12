@@ -15,7 +15,6 @@ ABI=$(getprop ro.product.cpu.abi)
     ABI32=x86
     IS64BIT=false
   elif [ "$ABI" = "arm64-v8a" ]; then
-    ABI=arm64_v8a
     ARCH=arm64
     ABI32=armeabi-v7a
     IS64BIT=true
@@ -24,7 +23,7 @@ ABI=$(getprop ro.product.cpu.abi)
     ABI32=x86
     IS64BIT=true
   else
-    ABI=armeabi_v7a
+    ABI=armeabi-v7a
     ARCH=arm
     ABI32=armeabi-v7a
     IS64BIT=false
@@ -32,10 +31,13 @@ ABI=$(getprop ro.product.cpu.abi)
 
 if [ "$ABI" == "arm64-v8a" ]; then
     short_ABI=arm64
+    ABI_APK=arm64_v8a
 elif [ "$ABI" == "armeabi-v7a" ]; then
     short_ABI=arm
+    ABI_APK=armeabi_v7a
 else
     short_ABI="$ABI"
+    ABI_APK="$ABI"
 fi
 
 ui_print "- System architecture: $ABI"
@@ -80,9 +82,9 @@ mkdir -p "$MODPATH/$YOUTUBE/lib/$short_ABI"
 
 ui_print "- Install necessary files"
 
-test ! -f "$MODPATH/$YOUTUBE/split_config.${ABI}.apk" && abort "! Unsupported architecture"
+test ! -f "$MODPATH/$YOUTUBE/split_config.${ABI_APK}.apk" && abort "! Unsupported architecture"
 
-unzip -oj "$MODPATH/$YOUTUBE/split_config.${ABI}.apk" lib/${ABI}/* -d "$MODPATH/$YOUTUBE/lib/$short_ABI" &>/dev/null
+unzip -oj "$MODPATH/$YOUTUBE/split_config.${ABI_APK}.apk" lib/${ABI}/* -d "$MODPATH/$YOUTUBE/lib/$short_ABI" &>/dev/null
 
 chmod -R 755 "$MODPATH/$YOUTUBE/lib/$short_ABI"
 
