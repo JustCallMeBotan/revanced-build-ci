@@ -5,3 +5,9 @@
 A Magisk module to install YouTube ReVanced into system. If you have YouTube as system app, this module will replace it.
 
 [Download here](https://github.com/HuskyDG/revanced-build-ci/releases/download/latest/revanced-magisk-installer.zip)
+
+Note: DO NOT update YouTube on Play Store
+
+## Credit
+
+- [shekhawat2](https://github.com/shekhawat2) for initial repo work. 
