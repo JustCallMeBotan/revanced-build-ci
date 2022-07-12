@@ -1,0 +1,1 @@
+Update ReVanced for YouTube version ${VERSION}

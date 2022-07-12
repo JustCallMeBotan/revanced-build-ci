@@ -39,3 +39,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./yt.sh
+      # use release feature instead of github artifacts because of quota limitation
+      - uses: marvinpinto/action-automatic-releases@latest
+        if: github.ref == 'refs/heads/master'
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "latest"
+          files: |
+            out
+

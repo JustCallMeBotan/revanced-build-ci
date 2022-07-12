@@ -4,6 +4,7 @@ CURDIR=$PWD
 WGET_HEADER="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"
 MODULEPATH=$CURDIR/RevancedYT
 YTVER=17.26.34
+VERSIONCODE=172634001
 SEND=$CURDIR/send.py
 
 rm -rf $CURDIR/$YTVER.zip
@@ -59,14 +60,18 @@ java -jar $CLI -a $MODULEPATH/youtube/base.apk -o $MODULEPATH/revanced.apk --key
 #    -e  microg-support -e hide-infocard-suggestions -e hide-autoplay-button -e disable-create-button -e disable-fullscreen-panels \
 #    -e hide-shorts-button -e hide-cast-button -e hide-cast-button -e custom-branding -e hide-watermark -e premium-heading
 
-cd $MODULEPATH
-zip -rv9 $CURDIR/RevancedYT_$YTVER.zip *
+cd $CURDIR || exit 1
 
-echo "**RevancedYT_$YTVER**" > $CURDIR/fm
-echo "" >> $CURDIR/fm
-echo "$(cat $CURDIR/message)" >> $CURDIR/fm
-echo "" >> $CURDIR/fm
-echo "**Skipped Patches:**" >> $CURDIR/fm
-echo "$(cat $CURDIR/skippedpatches)" >> $CURDIR/fm
+for file in $MODULEPATH/module.prop out/*; do
+    sed -i "s/\${VERSION}/$YTVER/g" "$file"
+    sed -i "s/\${VERSIONCODE}/$VERSIONCODE/g" "$file"
+done
 
-$SEND $CURDIR/RevancedYT_$YTVER.zip $CURDIR/fm
+cd $MODULEPATH || exit 1
+mkdir -p system/priv-app
+mv -f youtube system/priv-app
+
+# output
+mkdir $CURDIR/out
+
+zip -rv9 $CURDIR/out/revanced-magisk.zip *

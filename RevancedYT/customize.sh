@@ -1,24 +1,89 @@
-# Unmount Old ReVanced
-stock_path=$( pm path com.google.android.youtube | grep base | sed 's/package://g' )
-if [[ '$stock_path' ]] ; then umount -l $stock_path; fi
+if ! $BOOTMODE; then
+    abort "! Do not support installing from Recovery"
+fi
 
-# Install Youtube
-TPDIR=$MODPATH/youtube
-SESSION=$(pm install-create -r | grep -oE '[0-9]+')
-APKS="$(ls $TPDIR)"
-for APK in $APKS; do
-pm install-write $SESSION $APK $TPDIR/$APK
+MAGISKTMP="$(magisk --path)"
+test -z "$MAGISKTMP" && MAGISKTMP=/sbin
+YOUTUBE="system/priv-app/youtube"
+
+
+stock_path=$( pm path com.google.android.youtube | grep base | sed 's/package://g' )
+
+ABI=$(getprop ro.product.cpu.abi)
+  if [ "$ABI" = "x86" ]; then
+    ARCH=x86
+    ABI32=x86
+    IS64BIT=false
+  elif [ "$ABI" = "arm64-v8a" ]; then
+    ABI=arm64_v8a
+    ARCH=arm64
+    ABI32=armeabi-v7a
+    IS64BIT=true
+  elif [ "$ABI" = "x86_64" ]; then
+    ARCH=x64
+    ABI32=x86
+    IS64BIT=true
+  else
+    ABI=armeabi_v7a
+    ARCH=arm
+    ABI32=armeabi-v7a
+    IS64BIT=false
+  fi
+
+if [ "$ABI" == "arm64-v8a" ]; then
+    short_ABI=arm64
+elif [ "$ABI" == "armeabi-v7a" ]; then
+    short_ABI=arm
+else
+    short_ABI="$ABI"
+fi
+
+ui_print "- System architecture: $ABI"
+
+
+USERAPP="/data/app/"
+
+VENDOR_PREFIX="/vendor/"
+PRODUCT_PREFIX="/product"
+SYSTEM_EXT_PREFIX="/system_ext"
+
+# Remove Vanced Script
+rm -rf /data/adb/vanced
+rm -rf /data/adb/service.d/vanced.sh
+rm -rf /data/adb/post-fs-data.d/vanced.sh
+
+REPLACE="
+/$YOUTUBE
+"
+
+stock_path=$( pm path com.google.android.youtube | grep base | sed 's/package://g' )
+
+if [ "${stock_path: 0: ${#VENDOR_PREFIX}}" == "$VENDOR_PREFIX" ] || [ "${stock_path: 0: ${#PRODUCT_PREFIX}}" == "$PRODUCT_PREFIX" ] || [ "${stock_path: 0: ${#SYSTEM_EXT_PREFIX}}" == "$SYSTEM_EXT_PREFIX" ]; then
+    stock_path="/system${stock_path}"
+fi
+
+if [ "${stock_path: 0: ${#USERAPP}}" != "$USERAPP" ] && [ "${stock_path%/*}" != "/system/app" ]; then
+    REPLACE="$REPLACE
+${stock_path%/*}
+"
+else
+    abort "! Please uninstall updates for YouTube app and try again"
+fi
+
+cd "$MAGISKTMP/.magisk/modules/$MODID" && for replace in `find system -name ".replace"`; do
+    REPLACE="$REPLACE
+/${replace%/*}
+"
 done
-pm install-commit $SESSION
-rm -rf $TPDIR
 
-# Remove Old ReVanced
-rm -rf /data/adb/revanced
-rm -rf /data/adb/service.d/revanced.sh
+mkdir -p "$MODPATH/$YOUTUBE/lib/$short_ABI"
 
-# Mount for Now
-base_path=$MODPATH/revanced.apk
-stock_path=$( pm path com.google.android.youtube | grep base | sed 's/package://g' )
-chcon u:object_r:apk_data_file:s0 $base_path
-mount -o bind $base_path $stock_path
-am force-stop com.google.android.youtube
+ui_print "- Install necessary files"
+
+test ! -f "$MODPATH/$YOUTUBE/split_config.${ABI}.apk" && abort "! Unsupported architecture"
+
+unzip -oj "$MODPATH/$YOUTUBE/split_config.${ABI}.apk" lib/${ABI}/* -d "$MODPATH/$YOUTUBE/lib/$short_ABI" &>/dev/null
+
+chmod -R 755 "$MODPATH/$YOUTUBE/lib/$short_ABI"
+
+ln -sfT "./sqlite3_${ABI}" "$MODPATH/bin/sqlite3"

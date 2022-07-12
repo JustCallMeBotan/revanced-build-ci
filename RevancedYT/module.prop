@@ -1,5 +1,7 @@
-id=revanced
+id=youtube_revanced
 name=YouTube Revanced
-version=v1.0.0
-author=revanced
-description=RevancedYT Module by @Shekhawat2
+version=${VERSION}
+versionCode=${VERSIONCODE}
+author=ReVancedTeam
+description=YouTube ReVanced Module repacked by HuskyDG. Thanks @shekhawat2 for his initial work. DO NOT update YouTube on Play Store.
+updateJson=https://github.com/HuskyDG/revanced-build-ci/releases/download/lastest/update.json
