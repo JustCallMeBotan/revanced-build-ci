@@ -75,3 +75,16 @@ mv -f youtube system/priv-app
 mkdir $CURDIR/out
 
 zip -rv9 $CURDIR/out/revanced-magisk.zip *
+zip -rv9 $CURDIR/out/revanced-magisk-base.zip * -x \
+    system/priv-app/youtube/split_config.arm64_v8a.apk \
+    system/priv-app/youtube/split_config.armeabi_v7a.apk \
+    system/priv-app/youtube/split_config.x86.apk \
+    system/priv-app/youtube/split_config.x86_64.apk
+
+for abi in arm64_v8a armeabi_v7a x86 x86_64; do
+    zip -rv9 $CURDIR/out/revanced-magisk-$abi system/priv-app/youtube/split_config.${abi}.apk
+done
+
+
+
+
