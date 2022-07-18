@@ -1,2 +1,2 @@
-- Update ReVanced for YouTube version ${VERSION}
+- Update ReVanced for YouTube version ${VERSION} (The version name of each YouTube update is not seamless)
 - Remove being automatically update from Google Play Store
