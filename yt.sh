@@ -56,7 +56,7 @@ SKIP+=' -e '$SKIPPATCH
 done
 
 #java -jar $CLI -a $MODULEPATH/youtube/base.apk -o $MODULEPATH/revanced.apk -b $PATCHES -l
-java -jar $CLI -a $MODULEPATH/youtube/base.apk -o $MODULEPATH/revanced.apk --keystore=$CURDIR/revanced.keystore -b $PATCHES -m $INTEG --experimental $SKIP
+java -jar $CLI -a $MODULEPATH/youtube/base.apk -o $MODULEPATH/revanced.apk --keystore=$CURDIR/revanced.keystore -b $PATCHES -m $INTEG --experimental $SKIP || exit 1
 #    -e  microg-support -e hide-infocard-suggestions -e hide-autoplay-button -e disable-create-button -e disable-fullscreen-panels \
 #    -e hide-shorts-button -e hide-cast-button -e hide-cast-button -e custom-branding -e hide-watermark -e premium-heading
 
