@@ -1,6 +1,4 @@
 #!/system/bin/sh
-MAGISKTMP="$(magisk --path)"
-[ -z "$MAGISKTMP" ] && MAGISKTMP=/sbin
 MODDIR="${0%/*}"
 
 # remove youtube updates
@@ -28,7 +26,7 @@ umount -l "$stock_path"
 
 chmod 666 "$base_path"
 chcon u:object_r:system_file:s0 "$base_path"
-mount -o bind "$MAGISKTMP/.magisk/mirror/$base_path" "$stock_path"
+mount -o bind "$base_path" "$stock_path"
 
 PK=com.google.android.youtube
 PS=com.android.vending
